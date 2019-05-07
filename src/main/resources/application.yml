@@ -1,0 +1,33 @@
+spring:
+  profiles: dev
+
+  thymeleaf:
+    cache: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+server:
+  port: 8443
+  ssl:
+    key-store: file:////Users/innocentjr/Downloads/demo/mykeys.jks
+    key-store-password: letmein
+    key-password: letmein
+
+logging:
+  path: /var/logs/
+  file: Tacos.log
+  level:
+    root: WARN
+    org:
+      springframework:
+        security: DEBUG
+com:
+  example:
+    demo:
+      orders: 10

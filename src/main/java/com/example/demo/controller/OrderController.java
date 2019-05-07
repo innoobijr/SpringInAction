@@ -1,8 +1,11 @@
 package com.example.demo.controller;
+import com.example.demo.config.OrderProps;
 import com.example.demo.model.Order;
 import com.example.demo.model.User;
 import com.example.demo.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +26,20 @@ public class OrderController {
 
     private OrderRepository orderRepo;
 
-    public OrderController(OrderRepository orderRepo) {
+    private OrderProps orderProps;
+
+    public OrderController(OrderRepository orderRepo, OrderProps orderProps) {
         this.orderRepo = orderRepo;
+        this.orderProps = orderProps;
     }
 
     @GetMapping("/current")
-    public String orderForm() {
-        return "orderForm";
+    public String orderForUser(
+            @AuthenticationPrincipal User user, Model model){
+        Pageable pageable = PageRequest.of(0, orderProps.getPageSize());
+        model.addAttribute("orders", orderRepo.findByUserOrderByPlacedAtDesc(user, pageable));
+
+        return "orderList";
     }
 
     @PostMapping
@@ -46,6 +56,7 @@ public class OrderController {
         sessionStatus.setComplete();
         return "redirect:/";
     }
+
 
     /*
     * In OrderController, the processOrder() method is responsible for saving an order. It will need ot me modified to
