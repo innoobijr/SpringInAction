@@ -34,10 +34,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/design", "/orders")
-                .access("hasRole('ROLE_USER')")
-                .antMatchers("/", "/**").access("permitAll")
-                ;// SpELs are much more powerful ways of specifying rules
+                    .antMatchers("/design", "/orders")
+                        .access("hasRole('ROLE_USER')")
+                    .antMatchers("/", "/**").access("permitAll") // SpELs are much more powerful ways of specifying rules
+                .and()
+                    .formLogin()
+                        .loginPage("/login")
+                        .loginProcessingUrl("/authenticate")
+                        .usernameParameter("user")
+                        .passwordParameter("pwd")
+                .and()
+                    .logout()
+                        .logoutSuccessUrl("/");
     }
 
     @Override

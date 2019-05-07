@@ -3,14 +3,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotBlank;
@@ -68,4 +61,7 @@ public class Order implements Serializable {
     void placedAt() {
         this.placedAt = new Date();
     }
+
+    @ManyToOne
+    private User user; // Indicates that an order belongs to a single user, and conversely that a user may have many orders
 }

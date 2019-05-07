@@ -13,6 +13,8 @@ public class RegistrationController {
     private UserRepository userRepo;
     private PasswordEncoder passwordEncoder;
 
+    Exception st = new IllegalStateException();
+
     public RegistrationController(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
@@ -29,3 +31,5 @@ public class RegistrationController {
         return "redirect:/login";
     }
 }
+
+
