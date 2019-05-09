@@ -1,5 +1,9 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AccessLevel;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -13,7 +17,13 @@ import javax.persistence.PrePersist;
 import java.util.Date;
 import java.util.List;
 
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+
 @Data
+@NoArgsConstructor(access= AccessLevel.PRIVATE, force=true)
 @Entity
 public class Taco {
 

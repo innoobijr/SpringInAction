@@ -40,7 +40,15 @@ public class DesignTacoController {
     }
 
     @GetMapping("/recent")
-    public Resources<TacoResource> recentTacos(){
+    public Iterable<Taco> recentTacos() {                 //<3>
+        PageRequest page = PageRequest.of(
+                0, 12, Sort.by("createdAt").descending());
+        System.out.println(tacoRepo.findAll(page).getContent());
+        return tacoRepo.findAll(page).getContent();
+    }
+
+    @GetMapping("/recenth")
+    public Resources<TacoResource> recentTacosh(){
         PageRequest page = PageRequest.of(
                 0, 12, Sort.by("createdAt").descending());
         List<Taco> tacos = tacoRepo.findAll(page).getContent();
@@ -54,19 +62,27 @@ public class DesignTacoController {
         return recentResources;
     }
 
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
         Optional<Taco> optTaco = tacoRepo.findById(id);
         if (optTaco.isPresent()) {
             return new ResponseEntity<>(optTaco.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }*/
+
+    @GetMapping("/{id}")
+    public Taco tacoById(@PathVariable("id") Long id) {
+        Optional<Taco> optTaco = tacoRepo.findById(id);
+        if (optTaco.isPresent()) {
+            return optTaco.get();
+        }
+        return null;
     }
 
     @PostMapping(consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Taco postTaco(@RequestBody Taco taco){
-        System.out.println("Postings Taco");
         return tacoRepo.save(taco);
     }
 

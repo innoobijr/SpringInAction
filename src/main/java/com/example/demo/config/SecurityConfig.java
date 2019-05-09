@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,12 +35,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // Essentially shutting of the security settings in order to test the DB
        http
-               .authorizeRequests().antMatchers("/").permitAll()
-               .and()
-               .authorizeRequests().antMatchers("/h2-console/**").permitAll();
+               .authorizeRequests()
+               .antMatchers(HttpMethod.OPTIONS).permitAll() // needed for Angular/CORS
+               .antMatchers(HttpMethod.POST, "/api/ingredients").permitAll()
+               .antMatchers("/design", "/orders/**")
+               .permitAll()
+               //.access("hasRole('ROLE_USER')")
+               .antMatchers(HttpMethod.PATCH, "/ingredients").permitAll()
+               .antMatchers("/**").access("permitAll")
 
-       http.csrf().disable();
-       http.headers().frameOptions().disable();
+       .and()
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**", "/ingredients/**", "/design", "/orders/**", "/api/**")
+        // Allow pages to be loaded in frames from the same origin; needed for H2-Consol
+        .and()
+                .headers()
+                .frameOptions()
+                .sameOrigin()
+        ;
+       //http.csrf().disable();
+       //http.headers().frameOptions().disable();
                 //.authorizeRequests()
                     //.antMatchers("/design", "/orders")
                     //    .access("hasRole('ROLE_USER')")
