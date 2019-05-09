@@ -12,16 +12,16 @@ spring:
       enabled: true
       path: /h2-console
 
-server:
-  port: 8443
-  ssl:
-    key-store: file:////Users/innocentjr/Downloads/demo/mykeys.jks
-    key-store-password: letmein
-    key-password: letmein
+#server:
+#  port: 8080
+#  ssl:
+#    key-store: file:////Users/innocentjr/Downloads/demo/mykeys.jks
+#    key-store-password: letmein
+#    key-password: letmein
 
 logging:
-  path: /var/logs/
-  file: Tacos.log
+  path: /vars/logs/
+  file: /vars/logs/Tacos.log
   level:
     root: WARN
     org:

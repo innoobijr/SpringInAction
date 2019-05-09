@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 @Slf4j
 @Controller
-@RequestMapping("/orders")
+@RequestMapping("/orderz")
 @SessionAttributes("order")
 public class OrderController {
 

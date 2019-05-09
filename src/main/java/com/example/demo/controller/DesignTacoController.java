@@ -1,44 +1,76 @@
 package com.example.demo.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-import javax.validation.Valid;
-
-import com.example.demo.model.Design;
-import com.example.demo.model.Order;
-import com.example.demo.repository.IngredientRepository;
+import com.example.demo.api.TacoResource;
+import com.example.demo.api.TacoResourceAssembler;
 import com.example.demo.repository.TacoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.EntityLinks;
+import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import com.example.demo.model.Taco;
-import com.example.demo.model.Ingredient;
-import com.example.demo.model.Ingredient.Type;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Slf4j
-@Controller
-@RequestMapping("/design")
-@SessionAttributes("order") // Injecting repository into controller
+@RestController
+@RequestMapping(path="/design", produces="application/json")
+@CrossOrigin(origins="*") //@SessionAttributes("order") // Injecting repository into controller
 public class DesignTacoController {
 
-    private final IngredientRepository ingredientRepo;
+    //private final IngredientRepository ingredientRepo;
 
-    private TacoRepository designRepo;
+    private TacoRepository tacoRepo;
 
     @Autowired // Some good ol' dependency injection
-    public DesignTacoController(IngredientRepository ingredientRepo,
+    EntityLinks entityLinks;
+
+    public DesignTacoController(/*IngredientRepository ingredientRepo,*/
                                 TacoRepository designRepo) {
-        this.ingredientRepo = ingredientRepo;
-        this.designRepo = designRepo;
+        //this.ingredientRepo = ingredientRepo;
+        this.tacoRepo = designRepo;
     }
 
-    @ModelAttribute(name = "order")
+    @GetMapping("/recent")
+    public Resources<TacoResource> recentTacos(){
+        PageRequest page = PageRequest.of(
+                0, 12, Sort.by("createdAt").descending());
+        List<Taco> tacos = tacoRepo.findAll(page).getContent();
+        List<TacoResource> tacoResources = new TacoResourceAssembler().toResources(tacos);
+
+        Resources<TacoResource> recentResources = new Resources<TacoResource>(tacoResources);
+
+        recentResources.add(
+                linkTo(methodOn(DesignTacoController.class).recentTacos())
+                .withRel("recents"));
+        return recentResources;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Taco> tacoById(@PathVariable("id") Long id) {
+        Optional<Taco> optTaco = tacoRepo.findById(id);
+        if (optTaco.isPresent()) {
+            return new ResponseEntity<>(optTaco.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping(consumes="application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Taco postTaco(@RequestBody Taco taco){
+        System.out.println(taco);
+        return tacoRepo.save(taco);
+    }
+
+    /*@ModelAttribute(name = "order")
     public Order order() {
         return new Order();
     }
@@ -77,6 +109,6 @@ public class DesignTacoController {
         return ingredients.stream()
                 .filter(ingredient -> ingredient.getType().equals(type))
                 .collect(Collectors.toList());
-    }
+    }*/
 
 }
