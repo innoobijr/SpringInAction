@@ -12,6 +12,10 @@ spring:
       enabled: true
       path: /h2-console
 
+security:
+  basic:
+    enabled: true
+    authorize-mode: NONE
 #server:
 #  port: 8080
 #  ssl:
@@ -21,7 +25,7 @@ spring:
 
 logging:
   path: /vars/logs/
-  file: /vars/logs/Tacos.log
+  file: Tacos.log
   level:
     root: WARN
     org:

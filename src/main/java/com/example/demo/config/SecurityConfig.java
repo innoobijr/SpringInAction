@@ -32,12 +32,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // Essentially shutting of the security settings in order to test the DB
        http
-                .authorizeRequests()
-                    .antMatchers("/design", "/orders")
-                        .access("hasRole('ROLE_USER')")
-                    .antMatchers("/", "/**").access("permitAll") // SpELs are much more powerful ways of specifying rules
-                .and()
+               .authorizeRequests().antMatchers("/").permitAll()
+               .and()
+               .authorizeRequests().antMatchers("/h2-console/**").permitAll();
+
+       http.csrf().disable();
+       http.headers().frameOptions().disable();
+                //.authorizeRequests()
+                    //.antMatchers("/design", "/orders")
+                    //    .access("hasRole('ROLE_USER')")
+                //    .antMatchers("/", "/**").access("permitAll"); // SpELs are much more powerful ways of specifying rules
+                /*.and()
                     .formLogin()
                         .loginPage("/login")
                         .loginProcessingUrl("/authenticate")
@@ -45,16 +52,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .passwordParameter("pwd")
                 .and()
                     .logout()
-                        .logoutSuccessUrl("/");
+                        .logoutSuccessUrl("/");*/
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(encoder());
+        auth.inMemoryAuthentication()
+                .withUser("buzz")
+                    .password("infinity")
+                    .authorities("ROLE_USER")
+                ;
+                //.userDetailsService(userDetailsService)
+                //.passwordEncoder(encoder());
         /*auth //JDBC Example
-        /*        .inMemoryAuthentication()
+                .inMemoryAuthentication()
                     .withUser("buzz")
                         .password("infinity")
                         .authorities("ROLE_USER")

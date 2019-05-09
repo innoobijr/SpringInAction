@@ -66,7 +66,7 @@ public class DesignTacoController {
     @PostMapping(consumes="application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public Taco postTaco(@RequestBody Taco taco){
-        System.out.println(taco);
+        System.out.println("Postings Taco");
         return tacoRepo.save(taco);
     }
 
