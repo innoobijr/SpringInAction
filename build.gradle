@@ -30,7 +30,6 @@ dependencies {
     //compile group: 'org.apache.activemq', name: 'artemis-jms-client', version: '2.7.0'
     compile group: 'org.springframework.amqp', name: 'spring-rabbit', version: '2.1.5.RELEASE'
     compile group: 'org.springframework', name: 'spring-messaging', version: '5.1.5.RELEASE'
-    compile group: 'org.jacoco', name: 'jacoco-maven-plugin', version: '0.8.3'
     compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.2.4.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
