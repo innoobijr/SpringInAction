@@ -1,4 +1,19 @@
 spring:
+  artemis:
+    host: localhost
+    port: 61617
+    user: tacoweb
+    password: l3tm31n
+    embedded:
+      enabled: true
+  rabbitmq:
+    template:
+      exchange: tacocloud.orders
+        routing-key: kitchens.central
+  jms:
+    template:
+      default-destination: tacocloud.order.queue
+
   profiles: dev
 
   thymeleaf:
